@@ -11,6 +11,9 @@
 
 $credentialKey = "MM-Quickshare";
 
+# Magic powershell var. Disabling progress bar when uploading files greatly improves transfer speed. Like 10x
+$ProgressPreference = 'SilentlyContinue';
+
 try {
     Write-Host "Fetching token from Windows credential manager"
     $cred = Read-Creds -Target $credentialKey
