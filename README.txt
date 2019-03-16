@@ -1,2 +1,2 @@
-﻿1. Wejdź we właściwości każdego ze skryptów w tym folderze. Zaznacz "Odblokuj" w dolnej części okna jeśli tam coś takiego jest.
-2. Uruchom Setup.ps1 i podążaj za instrukcjami.
+﻿1. Open properties of each of the scripts in this folder. Check "Unlock" in the bottom part of the windows if you see something like that somewhere.
+2. Run Setup.ps1 and follow instructions.
