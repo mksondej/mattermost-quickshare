@@ -1,10 +1,10 @@
 ﻿
 $sendToDir = "${env:AppData}\Microsoft\Windows\SendTo"
 
-Remove-Item "$sendToDir\Mattermost (kanał).lnk"
-Remove-Item "$sendToDir\Mattermost (publiczny link).lnk"
+Remove-Item "$sendToDir\Mattermost (channel).lnk"
+Remove-Item "$sendToDir\Mattermost (public link).lnk"
 
-Write-Host "Odinstalowano aplikację. Możesz usunąć pliki z tego folderu."
-Write-Host "Wciśnij dowolny klawisz by zamknąć okno..."
+Write-Host "Uninstall complete. You can remove all files from this folder now."
+Write-Host "Press any key to exit..."
 
 Read-Host

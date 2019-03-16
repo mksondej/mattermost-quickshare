@@ -12,11 +12,11 @@
 $credentialKey = "MM-Quickshare";
 
 try {
-    Write-Host "Ogarniam dane logowania"
+    Write-Host "Fetching token from Windows credential manager"
     $cred = Read-Creds -Target $credentialKey
     
     if($null -eq $cred) {
-        Show-Error "Brak zapisanych danych logowania do MM. Obczaj instrukcję."
+        Show-Error "No token found. Did you run Setup.ps1 before? If yes, see troubleshooting section in README.md"
         exit 1
     }
     
@@ -28,10 +28,10 @@ try {
     
     function Upload-Channel($channelId) {
         #Upload all files
-        Write-Host "Wysyłam pliki"
+        Write-Host "Sending files..."
         $fileIds = @()
         foreach($path in $paths) {
-            Write-Host "Wysyłam " $path
+            Write-Host "Sending " $path
     
             $channelIdEncoded = [System.Web.HttpUtility]::UrlEncode($channelId)
             $fileName = Split-Path $path -Leaf
@@ -46,7 +46,7 @@ try {
         }
         
         #Post a message with the file attached
-        Write-Host "Robię posta"
+        Write-Host "Creating a post"
         $postData = @{
             "channel_id" = $channelId;
             "message" = "#Quickshare";
@@ -58,7 +58,7 @@ try {
         #Handle public links
         if($public -eq $true) {
             if($paths.Count -gt 1) {
-                Show-Error "Link publiczny da się pobrać jak wysyłasz tylko 1 plik."
+                Show-Error "Public link can be generated only if you send only 1 file."
                 exit 1
             } else {
                 $linkResult = Invoke-RestMethod -Uri "$apiUrl/files/$($fileIds[0])/link" -Method Get -Headers $headers
@@ -67,9 +67,9 @@ try {
         }
         
         #Notify success
-        $notificationText = 'Wysłano plików: ' + $fileIds.Count
+        $notificationText = 'Files sent: ' + $fileIds.Count
         if($public -eq $true) {
-            $notificationText += "`nLink masz w schowku."
+            $notificationText += "`nPublic link is in the clipboard"
         }
     
         Show-Notification "Mattermost Quickshare" $notificationText
@@ -78,14 +78,14 @@ try {
     }
     
     #Get users private channel id
-    Write-Host "Pobieram dane użytkownika"
+    Write-Host "Fetching user data"
     $userData = Invoke-RestMethod -Uri "$apiUrl/users/me" -Method Get -Headers $headers
     
     if($channelPicker -eq $true) {
         $teamData = Invoke-RestMethod -Uri "$apiUrl/teams/name/$team" -Method Get -Headers $headers
         $channels = Invoke-RestMethod -Uri "$apiUrl/users/$($userData.id)/teams/$($teamData.id)/channels" -Method Get -Headers $headers
         $channelsForPicker = $channels | Where-Object { ($_.type -ne "D") -and ($_.type -ne "G") } | Sort-Object -Property type | Sort-Object -Property display_name
-        Show-Picker "Wybierz kanał" $channelsForPicker "id" "display_name" { 
+        Show-Picker "Choose the channel" $channelsForPicker "id" "display_name" { 
             param($channel) Upload-Channel $channel.id 
         }
     } else {
@@ -95,5 +95,5 @@ try {
     }
 } catch {
     Write-Host $_
-    Read-Host "Wystąpił błąd. Wciśnij dowolny klawisz by zakmnąć okno..."
+    Read-Host "An error occured. Press any key to exit..."
 }

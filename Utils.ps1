@@ -21,7 +21,7 @@
     $ComboBox1.DisplayMember = $nameMember;
 
     $Button1                         = New-Object system.Windows.Forms.Button
-    $Button1.text                    = "Wyślij"
+    $Button1.text                    = "Send"
     $Button1.width                   = 60
     $Button1.height                  = 30
     $Button1.location                = New-Object System.Drawing.Point(242,43)
@@ -35,7 +35,7 @@
 }
 function Show-Error([string]$msg) {
     Add-Type -AssemblyName PresentationCore,PresentationFramework
-    [System.Windows.MessageBox]::Show($msg, "Błąd", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+    [System.Windows.MessageBox]::Show($msg, "Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
 }
     
 function Show-Notification([string]$title, [string]$msg) {
